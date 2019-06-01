@@ -1,0 +1,39 @@
+@charset "UTF-8";
+
+.navbar {
+  margin-bottom: 50px;
+  border-radius: 0;
+}
+
+.jumbotron {
+  margin-bottom: 0;
+}
+
+footer {
+  background-color: #f2f2f2;
+  padding: 25px;
+}
+
+@media (min-width: 1200px) {
+  .container {
+    width: 90%;
+    max-width: 90%;
+  }
+}
+
+.panel-heading {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.price {
+  font-size: 18px;
+  font-weight: bold;
+  padding-top: 5px;
+}
+
+.product-panel {
+  cursor: pointer;
+  margin: 1rem;
+}
+

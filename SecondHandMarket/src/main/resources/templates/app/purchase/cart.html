@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<title>Second Hand Market</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
+<link rel="stylesheet" href="../static/css/styles.css"
+	th:href="@{/css/styles.css}" />
+</head>
+<body>
+	<div class="jumbotron">
+		<div class="container text-center">
+			<h1>Second Hand Market</h1>
+		</div>
+	</div>
+
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+		<a class="navbar-brand" th:href="@{/}">SHM</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false"
+			aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
+				<li class="nav-item" sec:authorize="isAuthenticated()"><a
+					class="nav-link" th:href="@{/app/myproducts}">My Products</a></li>
+				<li class="nav-item" sec:authorize="isAuthenticated()"><a
+					class="nav-link" th:href="@{/app/mypurchases}">My Purchases</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li class="nav-item active" sec:authorize="isAuthenticated()"><a
+					class="nav-link" th:href="@{/app/cart}"><span
+						class="glyphicon glyphicon-shopping-cart"></span> Cart</a></li>
+				<li class="nav-item" sec:authorize="!isAuthenticated()"><a
+					class="nav-link" th:href="@{/auth/login}"><span
+						class="glyphicon glyphicon-user"></span> Login</a></li>
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+					role="button" data-toggle="dropdown" aria-haspopup="true"
+					aria-expanded="false"> <span th:text="${#authentication.name}">Dropdown</span>
+						<span class="caret"></span>
+				</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item"
+							href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
+					</div></li>
+			</ul>
+		</div>
+	</nav>
+	<form th:action="@{/auth/logout}" method="POST" id="logoutForm"></form>
+
+	<div class="container">
+		<div class="row d-flex justify-content-center" th:if="${cart == null}">
+			<div>
+				<div class="jumbotron">
+					<div class="container">
+						<h2 class="text-center">There is no product selected yet</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row d-flex justify-content-center" th:unless="${cart == null}">
+			<div class="col-sm-12 col-md-10 col-md-offset-1">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>Product</th>
+							<th class="text-center">Total</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="product : ${cart}">
+							<td class="col-md-10">
+								<div class="media">
+									<img src="https://placehold.it/150x150?text=NO%20IMAGE"
+										class="thumbnail pull-left media-object"
+										th:src="${#strings.isEmpty(product.image)} ? 'https://placehold.it/150x150?text=NO%20IMAGE' : ${product.image}"
+										style="width: 150px;" />
+									<div class="media-body">
+										<h4 class="media-heading">
+											&nbsp; <span th:text="${product.name}">Product Name</span>
+										</h4>
+										<h5 class="media-heading">
+											&nbsp; by <span th:text="${product.owner.email}">user@acme.com</span>
+										</h5>
+									</div>
+								</div>
+							</td>
+
+							<td class="col-md-1 text-center"><strong
+								th:text="${#numbers.formatCurrency(product.price)}">$9.99</strong>
+							</td>
+							<td class="col-md-1"><a
+								th:href="@{/app/cart/remove/{id}(id=${product.id})}"
+								class="btn btn-danger"> <i class="fas fa-trash"></i> Remove
+							</a></td>
+						</tr>
+
+						<tr>
+							<td></td>
+							<td><h3>Total</h3></td>
+							<td class="text-right">
+								<h3>
+									<strong th:text="${#numbers.formatCurrency(total_cart)}">$9.99</strong>
+								</h3>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><a th:href="@{/public/}" class="btn btn-primary"> <i
+									class="fas fa-shopping-cart"></i> Keep Shopping
+							</a></td>
+							<td><a th:href="@{/app/cart/checkout}"
+								class="btn btn-success">Checkout <i
+									class="fas fa-money-check"></i>
+							</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+		th:src="@{/webjars/jquery/jquery.min.js}"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+</html>
